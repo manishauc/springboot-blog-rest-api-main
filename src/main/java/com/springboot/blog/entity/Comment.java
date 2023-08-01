@@ -24,6 +24,11 @@ public class Comment {
     @JoinColumn(name = "tweet_id", nullable = false)
     private Tweets tweet;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+
 	public long getId() {
 		return id;
 	}
@@ -46,6 +51,13 @@ public class Comment {
 
 	public void setTweet(Tweets tweet2) {
 		this.tweet = tweet2;
+	}
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	
