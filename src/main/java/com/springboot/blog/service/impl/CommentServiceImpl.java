@@ -2,11 +2,13 @@ package com.springboot.blog.service.impl;
 
 import com.springboot.blog.entity.Comment;
 import com.springboot.blog.entity.Tweets;
+import com.springboot.blog.entity.User;
 import com.springboot.blog.exception.BlogAPIException;
 import com.springboot.blog.exception.ResourceNotFoundException;
 import com.springboot.blog.payload.CommentDto;
 import com.springboot.blog.repository.CommentRepository;
 import com.springboot.blog.repository.TweetsRepository;
+import com.springboot.blog.repository.UserRepository;
 import com.springboot.blog.service.CommentService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -21,23 +23,29 @@ public class CommentServiceImpl implements CommentService {
     private CommentRepository commentRepository;
     private TweetsRepository tweetsRepository;
     private ModelMapper mapper;
-    public CommentServiceImpl(CommentRepository commentRepository, TweetsRepository tweetsRepository, ModelMapper mapper) {
+    private UserRepository userRepository;
+    public CommentServiceImpl(CommentRepository commentRepository, TweetsRepository tweetsRepository, ModelMapper mapper,UserRepository userRepository) {
         this.commentRepository = commentRepository;
         this.tweetsRepository = tweetsRepository;
         this.mapper = mapper;
+        this.userRepository =userRepository;
     }
 
     @Override
-    public CommentDto createComment(long tweetId, CommentDto commentDto) {
+    public CommentDto createComment(long tweetId, long userId,CommentDto commentDto) {
 
         Comment comment = mapToEntity(commentDto);
-
+        
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException("User", "id", userId));
+        
         // retrieve post entity by id
         Tweets tweet = tweetsRepository.findById(tweetId).orElseThrow(
                 () -> new ResourceNotFoundException("Tweet", "id", tweetId));
 
         // set post to comment entity
         comment.setTweet(tweet);
+        comment.setUser(user);
 
         // comment entity to DB
         Comment newComment =  commentRepository.save(comment);
