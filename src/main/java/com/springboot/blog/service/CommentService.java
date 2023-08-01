@@ -7,7 +7,7 @@ import java.util.List;
 public interface CommentService {
 	
 	
-    CommentDto createComment(long tweetId, CommentDto commentDto);
+      CommentDto createComment(long tweetId, long userId,CommentDto commentDto);
 
     List<CommentDto> getCommentsByTweetId(long tweetId);
     
