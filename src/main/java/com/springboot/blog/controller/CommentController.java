@@ -19,10 +19,11 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @PostMapping("/tweets/{tweetId}/comments")
+   @PostMapping("/tweets/{tweetId}/{userId}/comments")
     public ResponseEntity<CommentDto> createComment(@PathVariable(value = "tweetId") long tweetId,
+    												@PathVariable(value = "userId") long userId,
                                                     @Valid @RequestBody CommentDto commentDto){
-        return new ResponseEntity<>(commentService.createComment(tweetId, commentDto), HttpStatus.CREATED);
+        return new ResponseEntity<>(commentService.createComment(tweetId,userId, commentDto), HttpStatus.CREATED);
     }
 
     @GetMapping("/tweets/{tweetId}/comments")
